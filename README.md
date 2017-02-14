@@ -39,4 +39,10 @@ Tested on OS X Yosemite 10.10.5, Python 2.7
 	    ... ...
 
 
+##Known problems
+
+Processes created by Safari browser will be displayed as same PID as main Safari process.
+
+https://github.com/sjitech/mac_list_windows_pids/issues/1
+
 
