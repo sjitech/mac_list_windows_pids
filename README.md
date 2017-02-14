@@ -5,6 +5,8 @@ Mac OS X:  list all windows title and their owner process ids
 
 Tested on OS X Yosemite 10.10.5, Python 2.7
 
+*Note* if you run into error `No module named Quartz`, then run `pip install pyobjc-framework-Quartz` to install it.
+
 	$ python lswin.py
 
 	    PID WinID  x,y,w,h               	[Title] SubTitle
