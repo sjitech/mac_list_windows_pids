@@ -9,8 +9,8 @@ wl = sorted(wl, key=lambda k: k.valueForKey_('kCGWindowOwnerPID'))
 
 #print wl
 
-print 'PID'.rjust(7) + ' ' + 'WinID'.rjust(5) + '  ' + 'x,y,w,h'.ljust(21) + ' ' + '\t[Title] SubTitle'
-print '-'.rjust(7,'-') + ' ' + '-'.rjust(5,'-') + '  ' + '-'.ljust(21,'-') + ' ' + '\t-------------------------------------------'
+print( 'PID'.rjust(7) + ' ' + 'WinID'.rjust(5) + '  ' + 'x,y,w,h'.ljust(21) + ' ' + '\t[Title] SubTitle')
+print( '-'.rjust(7,'-') + ' ' + '-'.rjust(5,'-') + '  ' + '-'.ljust(21,'-') + ' ' + '\t-------------------------------------------')
 
 for v in wl:
 	print ( \
@@ -27,4 +27,4 @@ for v in wl:
 		'}' + \
 		'\t[' + ((v.valueForKey_('kCGWindowOwnerName') or '') + ']') + \
 		('' if v.valueForKey_('kCGWindowName') is None else (' ' + v.valueForKey_('kCGWindowName') or '')) \
-	).encode('utf8')
+	)
