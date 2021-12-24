@@ -1,11 +1,11 @@
-# mac_list_windows_pids
+# `mac_list_windows_pids`
 Mac OS X:  list all windows title and their owner process ids
 
-##Usage:  
+## Usage:
 
-Tested on OS X Yosemite 10.10.5, Python 2.7
+Tested on macOS Monterey 12.2, Python 3.10.0
 
-*Note* if you run into error `No module named Quartz`, then run `pip install pyobjc-framework-Quartz` to install it.
+*Note* if you run into error `No module named Quartz`, then run `pip install -r requirements.txt` to install it.
 
 	$ python lswin.py
 
@@ -39,7 +39,7 @@ Tested on OS X Yosemite 10.10.5, Python 2.7
 	    ... ...
 
 
-##Known problems
+## Known problems
 
 Processes created by Safari browser will be displayed as same PID as main Safari process.
 
