@@ -1,30 +1,34 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 import Quartz
 
-#wl = Quartz.CGWindowListCopyWindowInfo( Quartz.kCGWindowListOptionOnScreenOnly | Quartz.kCGWindowListExcludeDesktopElements, Quartz.kCGNullWindowID)
-wl = Quartz.CGWindowListCopyWindowInfo( Quartz.kCGWindowListOptionAll, Quartz.kCGNullWindowID)
+# win_list = Quartz.CGWindowListCopyWindowInfo( Quartz.kCGWindowListOptionOnScreenOnly | Quartz.kCGWindowListExcludeDesktopElements, Quartz.kCGNullWindowID)
+win_list = Quartz.CGWindowListCopyWindowInfo(Quartz.kCGWindowListOptionAll, Quartz.kCGNullWindowID)
+win_list = sorted(win_list, key=lambda k: k.valueForKey_('kCGWindowOwnerPID'))
 
-wl = sorted(wl, key=lambda k: k.valueForKey_('kCGWindowOwnerPID'))
+# print head
+print('    PID  WinID  (x, y, w, h)              [Title] SubTitle')
+print('-------  -----  ------------------------  -------------------------------------------')
 
-#print wl
+# print items
+for w in win_list:
+    win_rect = (
+        f"("
+        f"{int(w.valueForKey_('kCGWindowBounds').valueForKey_('X'))},"
+        f" {int(w.valueForKey_('kCGWindowBounds').valueForKey_('Y'))},"
+        f" {int(w.valueForKey_('kCGWindowBounds').valueForKey_('Width'))},"
+        f" {int(w.valueForKey_('kCGWindowBounds').valueForKey_('Height'))}"
+        f")"
+    )
+    subtitle = w.valueForKey_('kCGWindowName')
+    title_info = (
+        f"[{w.valueForKey_('kCGWindowOwnerName') or ''}]"
+        f"{'' if not subtitle else ' ' + subtitle}"
+    )
 
-print('PID'.rjust(7) + ' ' + 'WinID'.rjust(5) + '  ' + 'x,y,w,h'.ljust(21) + ' ' + '\t[Title] SubTitle')
-print('-'.rjust(7,'-') + ' ' + '-'.rjust(5,'-') + '  ' + '-'.ljust(21,'-') + ' ' + '\t-------------------------------------------')
-
-for v in wl:
-	print (
-		str(v.valueForKey_('kCGWindowOwnerPID') or '?').rjust(7) +
-		' ' + str(v.valueForKey_('kCGWindowNumber') or '?').rjust(5) +
-		' {' + ('' if v.valueForKey_('kCGWindowBounds') is None else
-		 	(
-			 	str(int(v.valueForKey_('kCGWindowBounds').valueForKey_('X')))     + ',' +
-			 	str(int(v.valueForKey_('kCGWindowBounds').valueForKey_('Y')))     + ',' +
-			 	str(int(v.valueForKey_('kCGWindowBounds').valueForKey_('Width'))) + ',' +
-			 	str(int(v.valueForKey_('kCGWindowBounds').valueForKey_('Height')))
-		 	)
-		 	).ljust(21) +
-		'}' +
-		'\t[' + ((v.valueForKey_('kCGWindowOwnerName') or '') + ']') +
-		('' if v.valueForKey_('kCGWindowName') is None else (' ' + v.valueForKey_('kCGWindowName') or ''))
-	)
+    print(
+        f"{w.valueForKey_('kCGWindowOwnerPID') or '?': >7}"
+        f"  {w.valueForKey_('kCGWindowNumber') or '?': >5}"
+        f"  {win_rect: <24}  {title_info}"
+    )

@@ -4,39 +4,33 @@ MacOS:  list all windows title and their owner process ids.
 
 ## Usage
 
-Tested on MacOS `13.4`, Python `3.7 ~ 3.11`.
+Tested on `MacOS 13.4`, Python `3.7 ~ 3.11`.
 
 *Note* if you run into error `No module named Quartz`, then run `pip install pyobjc-framework-Quartz` to install it.
 
 ```sh
 $ python lswin.py
-    PID WinID  x,y,w,h               	[Title] SubTitle
-------- -----  --------------------- 	-------------------------------------------
-    169  1956 {0,-38,1280,25        }	[Window Server] Backstop Menubar
-    169  1955 {0,-60,1280,22        }	[Window Server] Menubar
-    169   396 {0,-38,1280,25        }	[Window Server] Backstop Menubar
-    169   395 {0,-60,1280,22        }	[Window Server] Menubar
-    169     6 {0,0,0,0              }	[Window Server] Cursor
-    169     4 {0,22,1280,25         }	[Window Server] Backstop Menubar
-    169     3 {0,0,1280,22          }	[Window Server] Menubar
-    169     2 {0,0,1280,800         }	[Window Server] Desktop
-    262   404 {0,-38,1280,38        }	[Google Chrome] 
-    262   393 {0,0,1280,800         }	[Google Chrome] 
-    262   380 {100,100,1,1          }	[Google Chrome] Focus Proxy
-    262   351 {1189,45,46,18        }	[Google Chrome] 
-    262    51 {0,0,1280,800         }	[Google Chrome] sjitech/mac_list_windows_pids
-    262    50 {0,755,1,1            }	[Google Chrome] 
-    262    43 {0,0,1280,22          }	[Google Chrome]
-    262    42 {0,0,1280,22          }	[Google Chrome]
-    266  3294 {0,23,1276,777        }	[Sublime Text] README.md — mac_list_windows_pids
-    266  1954 {0,-38,1280,38        }	[Sublime Text] 
-    266  1953 {0,0,1280,800         }	[Sublime Text] 
-    266  1952 {0,0,1280,800         }	[Sublime Text] 
-    266   345 {529,83,116,56        }	[Sublime Text] 
-    266   188 {100,100,1,1          }	[Sublime Text] Focus Proxy
-    266   186 {0,0,1280,22          }	[Sublime Text]
-    266   185 {0,0,1280,22          }	[Sublime Text]
-    266    93 {0,0,1280,800         }	[Sublime Text] lswin
+    PID  WinID  (x, y, w, h)              [Title] SubTitle
+-------  -----  ------------------------  -------------------------------------------
+    163  30498  (0, -24, 1920, 24)        [Window Server] Menubar
+    163    382  (3906, -44, 1920, 24)     [Window Server]
+    163    355  (0, -68, 1920, 24)        [Window Server] Menubar
+    163    169  (0, 0, 1920, 24)          [Window Server]
+    163    168  (0, 0, 1920, 24)          [Window Server] Menubar
+    163      4  (4, 4, 26, 35)            [Window Server]
+    187   6516  (751, 246, 417, 173)      [loginwindow]
+    187   1512  (0, -40, 1004, 30)        [loginwindow]
+    482     67  (0, 0, 1920, 1080)        [AXVisualSupportAgent]
+    482     68  (0, 0, 1920, 1080)        [AXVisualSupportAgent]
+    541  36561  (1173, 101, 367, 62)      [Google Chrome.app]
+    541  36554  (0, 25, 1920, 1055)       [Google Chrome.app]
+    541  32762  (1238, 242, 270, 74)      [Google Chrome.app]
+    541    307  (400, 204, 1120, 876)     [Google Chrome.app]
+    541  24548  (360, 236, 1200, 844)     [Google Chrome.app]
+   2522    474  (836, 473, 247, 160)      [TextInputSwitcher]
+   2525    255  (100, 852, 100, 128)      [Alfred]
+   2525    288  (634, 306, 652, 126)      [Alfred]
+   2525  11681  (100, 100, 1, 1)          [Alfred]
     ......
 ```
 
