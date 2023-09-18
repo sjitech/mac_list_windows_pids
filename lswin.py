@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from dataclasses import dataclass
 from itertools import tee
+from optparse import OptionParser
 from typing import Tuple, Iterable
 
 import Quartz
@@ -66,7 +67,23 @@ def print_window_infos(win_list: Iterable[WindowInfo]):
 
 
 if __name__ == '__main__':
+    option_parser = OptionParser(
+        '%prog [OPTION]...'
+        '\nlist all windows title and their owner process ids.'
+        '\n\nExamples:'
+        '\n  %prog'
+        '\n  %prog --exclude-0-area'
+    )
+    option_parser.add_option(
+        '--exclude-0-area', dest='exclude_0_area', default=False,
+        action='store_true', help='exclude windows with 0 area')
+    options, _ = option_parser.parse_args()
+
+    windows = list_window_infos()
+    if options.exclude_0_area:
+        windows = filter(lambda w: w.rect[2] > 0 and w.rect[3] > 0, windows)
+
     print_window_infos(sorted(
-        list_window_infos(),
+        windows,
         key=lambda w: (w.pid, w.win_id)
     ))
