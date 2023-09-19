@@ -4,9 +4,23 @@ import sys
 from dataclasses import dataclass, fields
 from itertools import tee
 from optparse import OptionParser
-from typing import Tuple, Iterable
+from typing import Iterable
 
 import Quartz
+
+
+@dataclass
+class Rect:
+    x: int
+    y: int
+    width: int
+    height: int
+
+    def s(self):
+        """
+        tuple style string for output
+        """
+        return str((self.x, self.y, self.width, self.height))
 
 
 @dataclass
@@ -14,10 +28,7 @@ class WindowInfo:
     pid: int
     win_id: int
 
-    rect: Tuple[int, int, int, int]
-    """
-    rect: (x, y, width, height)
-    """
+    rect: Rect
 
     title: str
     subtitle: str
@@ -28,7 +39,7 @@ def list_window_infos() -> Iterable[WindowInfo]:
         WindowInfo(
             pid=int(w.valueForKey_('kCGWindowOwnerPID')),
             win_id=int(w.valueForKey_('kCGWindowNumber')),
-            rect=(
+            rect=Rect(
                 int(w.valueForKey_('kCGWindowBounds').valueForKey_('X')),
                 int(w.valueForKey_('kCGWindowBounds').valueForKey_('Y')),
                 int(w.valueForKey_('kCGWindowBounds').valueForKey_('Width')),
@@ -53,7 +64,7 @@ def print_window_infos(win_list: Iterable[WindowInfo]):
     max_wid_chars = max(map(lambda w: len(str(w.win_id)), i_win_id))
     max_wid_chars = max(max_wid_chars, len(s_win_id))
 
-    max_rect_chars = max(map(lambda w: len(repr(w.rect)), i_rect))
+    max_rect_chars = max(map(lambda w: len(w.rect.s()), i_rect))
 
     # print head
     print(f"{s_pid : >{max_pid_chars}}  {s_win_id : >{max_wid_chars}}"
@@ -64,14 +75,13 @@ def print_window_infos(win_list: Iterable[WindowInfo]):
     for win in win_list:
         title_info = f"[{win.title}]{'' if not win.subtitle else ' ' + win.subtitle}"
         print(f"{win.pid: >{max_pid_chars}}  {win.win_id: >{max_wid_chars}}"
-              f"  {win.rect!r: <{max_rect_chars}}  {title_info}")
+              f"  {win.rect.s(): <{max_rect_chars}}  {title_info}")
 
 
 if __name__ == '__main__':
-    rect_index = {'x': 0, 'y': 1, 'width': 2, 'height': 3}
     supported_sort_keys = tuple(
         [f.name for f in fields(WindowInfo) if f.name != 'rect']
-        + list(rect_index.keys())
+        + [f.name for f in fields(Rect)]
     )
     sort_keys_str = ', '.join(supported_sort_keys)
 
@@ -107,17 +117,17 @@ if __name__ == '__main__':
 
     windows = list_window_infos()
     if options.exclude_0_area:
-        windows = filter(lambda w: w.rect[2] > 0 and w.rect[3] > 0, windows)
+        windows = filter(lambda w: w.rect.width > 0 and w.rect.height > 0, windows)
 
 
     def sort_key(w: WindowInfo):
-        key = []
+        keys = []
         for k in options.sort_key:
             if hasattr(w, k):
-                key.append(getattr(w, k))
+                keys.append(getattr(w, k))
             else:
-                key.append(w.rect[rect_index[k]])
-        return key + [w.pid, w.win_id]
+                keys.append(getattr(w.rect, k))
+        return keys + [w.pid, w.win_id]
 
 
     print_window_infos(sorted(windows, key=sort_key))
