@@ -124,16 +124,7 @@ if __name__ == '__main__':
     if options.exclude_0_area:
         windows = filter(lambda w: w.rect.width > 0 and w.rect.height > 0, windows)
     if options.filter_same_pid_window:
-        filter_windows = []
-        windows_dic = dict()
-        for w in windows:
-            wind_ind = str((w.pid, w.rect.x, w.rect.y, w.rect.width, w.rect.height))
-            if wind_ind not in windows_dic:
-                windows_dic[wind_ind] = 0
-                filter_windows.append(w)
-            else:
-                pass
-        windows = filter_windows
+        windows = {(w.pid, w.rect.x, w.rect.y, w.rect.width, w.rect.height): w for w in windows}.values()
 
     print_window_infos(sorted(
         windows, key=lambda w: tuple(
