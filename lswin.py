@@ -119,15 +119,9 @@ if __name__ == '__main__':
     if options.exclude_0_area:
         windows = filter(lambda w: w.rect.width > 0 and w.rect.height > 0, windows)
 
-
-    def sort_key(w: WindowInfo):
-        keys = []
-        for k in options.sort_key:
-            if hasattr(w, k):
-                keys.append(getattr(w, k))
-            else:
-                keys.append(getattr(w.rect, k))
-        return keys + [w.pid, w.win_id]
-
-
-    print_window_infos(sorted(windows, key=sort_key))
+    print_window_infos(sorted(
+        windows, key=lambda w: tuple(
+            getattr(w, k) if hasattr(w, k) else getattr(w.rect, k)
+            for k in options.sort_key
+        ) + (w.pid, w.win_id)
+    ))
