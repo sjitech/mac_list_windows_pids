@@ -96,13 +96,18 @@ if __name__ == '__main__':
         '\n  %prog'
         '\n  %prog --exclude-0-area'
         '\n  %prog --sort-key x --sort-key title'
+        '\n  %prog --filter_same_pid_window'
     )
     option_parser.add_option(
         '-Z', '--exclude-0-area', dest='exclude_0_area', default=False,
         action='store_true', help='exclude windows with 0 area')
     option_parser.add_option(
+        '-F', '--filter_same_pid_window', dest='filter_same_pid_window', default=False,
+        action='store_true', help='filter same pid window')
+    option_parser.add_option(
         '-k', '--sort-key', dest='sort_keys', default=[], action='append',
         metavar='SORT_KEY', help=f"sort key, can be {sort_keys_str}; default sort key is (pid, win_id)")
+
     options, _ = option_parser.parse_args()
 
     illegal_sort_keys = tuple(filter(lambda k: k not in supported_sort_keys, options.sort_keys))
@@ -118,6 +123,17 @@ if __name__ == '__main__':
     windows = list_window_infos()
     if options.exclude_0_area:
         windows = filter(lambda w: w.rect.width > 0 and w.rect.height > 0, windows)
+    if options.filter_same_pid_window:
+        filter_windows = []
+        windows_dic = dict()
+        for w in windows:
+            wind_ind = str((w.pid, w.rect.x, w.rect.y, w.rect.width, w.rect.height))
+            if wind_ind not in windows_dic:
+                windows_dic[wind_ind] = 0
+                filter_windows.append(w)
+            else:
+                pass
+        windows = filter_windows
 
     print_window_infos(sorted(
         windows, key=lambda w: tuple(
