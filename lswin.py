@@ -102,14 +102,14 @@ if __name__ == '__main__':
         '\n  %prog'
         '\n  %prog --exclude-0-area'
         '\n  %prog --sort-key x --sort-key title'
-        '\n  %prog --filter_same_pid_window'
+        '\n  %prog --keep-one-for-same-pid-rect'
     )
     option_parser.add_option(
         '-Z', '--exclude-0-area', dest='exclude_0_area', default=False,
         action='store_true', help='exclude windows with 0 area')
     option_parser.add_option(
-        '-F', '--filter_same_pid_window', dest='filter_same_pid_window',
-        default=False, action='store_true', help='filter same pid window')
+        '-o', '--keep-one-for-same-pid-rect', dest='keep_one_for_same_pid_rect',
+        default=False, action='store_true', help='keep only one window for same (pid, rect)')
     option_parser.add_option(
         '-k', '--sort-key', dest='sort_keys', default=[], action='append', metavar='SORT_KEY',
         help=f"sort key, can be {sort_keys_str}; default sort key is (pid, win_id)")
@@ -129,7 +129,7 @@ if __name__ == '__main__':
     windows = list_window_infos()
     if options.exclude_0_area:
         windows = filter(lambda w: w.rect.width > 0 and w.rect.height > 0, windows)
-    if options.filter_same_pid_window:
+    if options.keep_one_for_same_pid_rect:
         windows = {(w.pid, w.rect.t()): w for w in windows}.values()
 
     print_window_infos(sorted(
