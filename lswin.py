@@ -64,13 +64,13 @@ def print_window_infos(win_list: Iterable[WindowInfo]):
 
     i_pid, i_win_id, i_rect = tee(win_list, 3)
 
-    max_pid_chars = max(map(lambda w: len(str(w.pid)), i_pid))
+    max_pid_chars = max(len(str(w.pid)) for w in i_pid)
     max_pid_chars = max(max_pid_chars, len(s_pid))
 
-    max_wid_chars = max(map(lambda w: len(str(w.win_id)), i_win_id))
+    max_wid_chars = max(len(str(w.win_id)) for w in i_win_id)
     max_wid_chars = max(max_wid_chars, len(s_win_id))
 
-    max_rect_chars = max(map(lambda w: len(w.rect.s()), i_rect))
+    max_rect_chars = max(len(w.rect.s()) for w in i_rect)
 
     # print head
     print(f"{s_pid : >{max_pid_chars}}  {s_win_id : >{max_wid_chars}}"
@@ -116,7 +116,7 @@ if __name__ == '__main__':
 
     options, _ = option_parser.parse_args()
 
-    illegal_sort_keys = tuple(filter(lambda k: k not in supported_sort_keys, options.sort_keys))
+    illegal_sort_keys = tuple(k for k in options.sort_keys if k not in supported_sort_keys)
     if illegal_sort_keys:
         print(f"Unsupported sort key: {', '.join(illegal_sort_keys)}!"
               f" supported sort keys: {sort_keys_str}", file=sys.stderr)
@@ -128,7 +128,7 @@ if __name__ == '__main__':
 
     windows = list_window_infos()
     if options.exclude_0_area:
-        windows = filter(lambda w: w.rect.width > 0 and w.rect.height > 0, windows)
+        windows = (w for w in windows if w.rect.width > 0 and w.rect.height > 0)
     if options.keep_one_for_same_pid_rect:
         windows = {(w.pid, w.rect.t()): w for w in windows}.values()
 
