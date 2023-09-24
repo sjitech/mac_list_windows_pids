@@ -58,7 +58,7 @@ def list_window_infos() -> Iterable[WindowInfo]:
     )
 
 
-def print_window_infos(win_list: Iterable[WindowInfo]):
+def print_window_infos(win_list: Iterable[WindowInfo], no_headers: bool = False):
     s_pid = 'PID'
     s_win_id = 'WinID'
 
@@ -73,10 +73,11 @@ def print_window_infos(win_list: Iterable[WindowInfo]):
     max_rect_chars = max(len(w.rect.s()) for w in i_rect)
 
     # print head
-    print(f"{s_pid : >{max_pid_chars}}  {s_win_id : >{max_wid_chars}}"
-          f"  {'(x, y, w, h)': <{max_rect_chars}}  [Title] SubTitle")
-    print(f"{'-' * max_pid_chars}  {'-' * max_wid_chars}  {'-' * max_rect_chars}"
-          f"  {'-' * (80 - max_pid_chars - max_wid_chars - max_rect_chars - 6)}")
+    if not no_headers:
+        print(f"{s_pid : >{max_pid_chars}}  {s_win_id : >{max_wid_chars}}"
+              f"  {'(x, y, w, h)': <{max_rect_chars}}  [Title] SubTitle")
+        print(f"{'-' * max_pid_chars}  {'-' * max_wid_chars}  {'-' * max_rect_chars}"
+              f"  {'-' * (80 - max_pid_chars - max_wid_chars - max_rect_chars - 6)}")
     # print items
     for win in win_list:
         title_info = f"[{win.title}]{'' if not win.subtitle else ' ' + win.subtitle}"
@@ -113,6 +114,9 @@ if __name__ == '__main__':
     option_parser.add_option(
         '-k', '--sort-key', dest='sort_keys', default=[], action='append', metavar='SORT_KEY',
         help=f"sort key, can be {sort_keys_str}; default sort key is (pid, win_id)")
+    option_parser.add_option(
+        '-H', '--no-headers', dest='no_headers',
+        default=False, action='store_true', help='print no header line')
 
     options, _ = option_parser.parse_args()
 
@@ -137,4 +141,4 @@ if __name__ == '__main__':
             getattr(w, k) if hasattr(w, k) else getattr(w.rect, k)
             for k in options.sort_keys
         ) + (w.pid, w.win_id)
-    ))
+    ), no_headers=options.no_headers)
